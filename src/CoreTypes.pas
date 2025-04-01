@@ -39,6 +39,35 @@ type
     Next: PCandidateNode;
   end;
 
+procedure ClearVacancies(var Head: PVacancyNode);
+procedure ClearCandidates(var Head: PCandidateNode);
+
 implementation
+
+procedure ClearVacancies(var Head: PVacancyNode);
+var
+  Temp: PVacancyNode;
+begin
+  while Head <> nil do
+  begin
+    Temp := Head;
+    Head := Head^.Next;
+    Dispose(Temp^.Data);
+    Dispose(Temp);
+  end;
+end;
+
+procedure ClearCandidates(var Head: PCandidateNode);
+var
+  Temp: PCandidateNode;
+begin
+  while Head <> nil do
+  begin
+    Temp := Head;
+    Head := Head^.Next;
+    Dispose(Temp^.Data);
+    Dispose(Temp);
+  end;
+end;
 
 end.
