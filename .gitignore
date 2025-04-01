@@ -82,3 +82,6 @@ modules/
 
 # VSCode stuff
 .vscode/
+
+# MacOS stuff
+.DS_Store
