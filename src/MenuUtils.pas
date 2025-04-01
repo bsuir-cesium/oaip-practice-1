@@ -3,10 +3,11 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils;
+  CoreTypes, FileUtils, InputUtils, OutputUtils;
 
 procedure ShowMainMenu;
-procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode);
 
 implementation
 
@@ -25,7 +26,45 @@ begin
   SetConsoleCursorPosition(hConsole, cursorPos);
 end;
 
-procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+procedure ShowViewSubmenu(VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode);
+var
+  Choice: Integer;
+begin
+  repeat
+    ClearScreen;
+    Writeln('1. Просмотр вакансий');
+    Writeln('2. Просмотр кандидатов');
+    Writeln('3. Назад');
+    Write('Выберите: ');
+    Readln(Choice);
+
+    case Choice of
+      1:
+        begin
+          ClearScreen;
+          ShowAllVacancies(VacanciesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      2:
+        begin
+          ClearScreen;
+          ShowAllCandidates(CandidatesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      3:
+        Exit;
+    else
+      Writeln('Неверный выбор!');
+      Readln;
+    end;
+  until False;
+end;
+
+procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode);
 var
   Choice: Integer;
 begin
@@ -38,9 +77,12 @@ begin
     Readln(Choice);
 
     case Choice of
-      1: AddNewVacancy(VacanciesHead);
-      2: AddNewCandidate(CandidatesHead);
-      3: Exit;
+      1:
+        AddNewVacancy(VacanciesHead);
+      2:
+        AddNewCandidate(CandidatesHead);
+      3:
+        Exit;
     else
       Writeln('Неверный выбор!');
       Readln;
@@ -74,14 +116,23 @@ begin
     case Choice of
       1:
         LoadAllData(VacancyHead, CandidateHead);
-      2 .. 4:
+      2:
+        ShowViewSubmenu(VacancyHead, CandidateHead);
+      3 .. 4:
         Writeln('debug');
       5:
         ShowAddRecordMenu(VacancyHead, CandidateHead);
-      6 .. 10:
+      6 .. 8:
+        Writeln('debug');
+      9 .. 10:
         begin
-          Writeln('Досвидание');
-          break;
+          if Choice = 10 then
+            SaveAllData(VacancyHead, CandidateHead);
+
+          ClearVacancies(VacancyHead);
+          ClearCandidates(CandidateHead);
+
+          Exit;
         end
     else
       begin
