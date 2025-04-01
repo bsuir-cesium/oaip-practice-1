@@ -96,7 +96,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="FileUtils.pas"/>
         <DCCReference Include="MenuUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
