@@ -19,7 +19,6 @@ var
   NewVacancyNode: PVacancyNode;
   NewCandidateNode: PCandidateNode;
 begin
-  // Загрузка вакансий
   if FileExists('vacancies.TVacancy') then
   begin
     AssignFile(FVacancies, 'vacancies.TVacancy');
@@ -29,9 +28,8 @@ begin
       begin
         Read(FVacancies, Vacancy);
 
-        // Создание узла
         New(NewVacancyNode);
-        New(NewVacancyNode^.Data);  // Выделяем память для данных
+        New(NewVacancyNode^.Data);
         NewVacancyNode^.Data^ := Vacancy;
         NewVacancyNode^.Next := VacanciesHead;
         VacanciesHead := NewVacancyNode;
@@ -41,7 +39,6 @@ begin
     end;
   end;
 
-  // Загрузка кандидатов
   if FileExists('candidates.TCandidate') then
   begin
     AssignFile(FCandidates, 'candidates.TCandidate');
@@ -51,9 +48,8 @@ begin
       begin
         Read(FCandidates, Candidate);
 
-        // Создание узла
         New(NewCandidateNode);
-        New(NewCandidateNode^.Data);  // Выделяем память для данных
+        New(NewCandidateNode^.Data);
         NewCandidateNode^.Data^ := Candidate;
         NewCandidateNode^.Next := CandidatesHead;
         CandidatesHead := NewCandidateNode;
@@ -71,7 +67,6 @@ var
   CurrentVacancy: PVacancyNode;
   CurrentCandidate: PCandidateNode;
 begin
-  // Сохранение вакансий
   AssignFile(FVacancies, 'vacancies.TVacancy');
   try
     Rewrite(FVacancies);
@@ -85,7 +80,6 @@ begin
     CloseFile(FVacancies);
   end;
 
-  // Сохранение кандидатов
   AssignFile(FCandidates, 'candidates.TCandidate');
   try
     Rewrite(FCandidates);

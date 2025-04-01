@@ -21,7 +21,6 @@ begin
     Result := 'Нет';
 end;
 
-// Форматированный вывод вакансий
 procedure ShowAllVacancies(VacanciesHead: PVacancyNode);
 var
   Current: PVacancyNode;
@@ -60,7 +59,6 @@ begin
   Writeln('==============================================================================================================');
 end;
 
-// Форматированный вывод кандидатов
 procedure ShowAllCandidates(CandidatesHead: PCandidateNode);
 var
   Current: PCandidateNode;

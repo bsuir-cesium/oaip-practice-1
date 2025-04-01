@@ -45,7 +45,6 @@ begin
     Write('Максимальный возраст: ');
     Readln(NewVacancy^.MaxAge);
 
-    // Создаем новый узел
     New(NewNode);
     NewNode^.Data := NewVacancy;
     NewNode^.Next := VacanciesHead;
@@ -82,7 +81,6 @@ begin
     Write('Минимальный оклад: ');
     Readln(NewCandidate^.MinSalary);
 
-    // Создаем новый узел
     New(NewNode);
     NewNode^.Data := NewCandidate;
     NewNode^.Next := CandidatesHead;
