@@ -3,9 +3,10 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils;
+  CoreTypes, FileUtils, InputUtils;
 
 procedure ShowMainMenu;
+procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
 
 implementation
 
@@ -22,6 +23,29 @@ begin
   cursorPos.X := 0;
   cursorPos.Y := 0;
   SetConsoleCursorPosition(hConsole, cursorPos);
+end;
+
+procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+var
+  Choice: Integer;
+begin
+  repeat
+    ClearScreen;
+    Writeln('1. Добавить вакансию');
+    Writeln('2. Добавить кандидата');
+    Writeln('3. Назад');
+    Write('Выберите: ');
+    Readln(Choice);
+
+    case Choice of
+      1: AddNewVacancy(VacanciesHead);
+      2: AddNewCandidate(CandidatesHead);
+      3: Exit;
+    else
+      Writeln('Неверный выбор!');
+      Readln;
+    end;
+  until False;
 end;
 
 procedure ShowMainMenu;
@@ -53,8 +77,7 @@ begin
       2 .. 4:
         Writeln('debug');
       5:
-        Writeln('debug');
-//        ShowAddRecordMenu(VacancyHead, CandidateHead);
+        ShowAddRecordMenu(VacancyHead, CandidateHead);
       6 .. 10:
         begin
           Writeln('Досвидание');
