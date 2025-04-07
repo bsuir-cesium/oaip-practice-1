@@ -101,6 +101,7 @@
         <DCCReference Include="FileUtils.pas"/>
         <DCCReference Include="OutputUtils.pas"/>
         <DCCReference Include="CoreTypes.pas"/>
+        <DCCReference Include="ListUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -3,11 +3,9 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils, OutputUtils;
+  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils;
 
 procedure ShowMainMenu;
-procedure ShowAddRecordSubmenu(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
 
 implementation
 
@@ -90,7 +88,45 @@ begin
   until False;
 end;
 
+procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+var
+  Choice, ID: Integer;
+begin
+  repeat
+    ClearScreen;
+    Writeln('1. Удалить вакансию');
+    Writeln('2. Удалить кандидата');
+    Writeln('3. Назад');
+    Write('Выберите: ');
+    Readln(Choice);
 
+    case Choice of
+      1:
+      begin
+        Write('Введите ID вакансии: ');
+        Readln(ID);
+        if DeleteVacancy(VacanciesHead, ID) <> -1 then
+          Writeln('Вакансия ', ID, ' удалена!')
+        else
+          Writeln('Вакансия не найдена!');
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
+      2:
+      begin
+        Write('Введите ID кандидата: ');
+        Readln(ID);
+        if DeleteVacancy(VacanciesHead, ID) <> -1 then
+          Writeln('Кандидат ', ID, ' удалён!')
+        else
+          Writeln('Кандидат не найден!');
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
+      3: Exit;
+    end;
+  until False;
+end;
 
 procedure ShowMainMenu;
 var
@@ -125,7 +161,7 @@ begin
       5:
         ShowAddRecordSubmenu(VacancyHead, CandidateHead);
       6:
-        Writeln('debug');
+        ShowDeleteSubmenu(VacancyHead, CandidateHead);
       7:
         Writeln('debug');
       8:
