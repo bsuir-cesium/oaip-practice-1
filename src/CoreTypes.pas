@@ -6,6 +6,7 @@ type
   THasEducation = Boolean;
 
   TVacancy = record
+    ID: Integer;
     CompanyName: string[50];
     Specialty: string[50];
     Position: string[50];
@@ -18,6 +19,7 @@ type
   PVacancy = ^TVacancy;
 
   TCandidate = record
+    ID: Integer;
     FullName: string[50];
     BirthDate: TDate;
     Specialty: string[50];
@@ -39,10 +41,29 @@ type
     Next: PCandidateNode;
   end;
 
+var
+  LastVacancyID: Integer = 0;
+  LastCandidateID: Integer = 0;
+
+function GetNextVacancyID: Integer;
+function GetNextCandidateID: Integer;
+
 procedure ClearVacancies(var Head: PVacancyNode);
 procedure ClearCandidates(var Head: PCandidateNode);
 
 implementation
+
+function GetNextVacancyID: Integer;
+begin
+  Inc(LastVacancyID);
+  Result := LastVacancyID;
+end;
+
+function GetNextCandidateID: Integer;
+begin
+  Inc(LastCandidateID);
+  Result := LastCandidateID;
+end;
 
 procedure ClearVacancies(var Head: PVacancyNode);
 var

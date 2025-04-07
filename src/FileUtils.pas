@@ -10,6 +10,36 @@ procedure SaveAllData(VacanciesHead: PVacancyNode; CandidatesHead: PCandidateNod
 
 implementation
 
+procedure SaveIDsToFile;
+var
+  F: TextFile;
+begin
+  AssignFile(F, 'ids.dat');
+  try
+    Rewrite(F);
+    Writeln(F, LastVacancyID);
+    Writeln(F, LastCandidateID);
+  finally
+    CloseFile(F);
+  end;
+end;
+
+procedure LoadIDsFromFile;
+var
+  F: TextFile;
+begin
+  if not FileExists('ids.dat') then Exit;
+
+  AssignFile(F, 'ids.dat');
+  try
+    Reset(F);
+    Readln(F, LastVacancyID);
+    Readln(F, LastCandidateID);
+  finally
+    CloseFile(F);
+  end;
+end;
+
 procedure LoadAllData(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
 var
   FVacancies: file of TVacancy;
@@ -19,6 +49,7 @@ var
   NewVacancyNode: PVacancyNode;
   NewCandidateNode: PCandidateNode;
 begin
+  LoadIDsFromFile;
   if FileExists('vacancies.TVacancy') then
   begin
     AssignFile(FVacancies, 'vacancies.TVacancy');
@@ -67,6 +98,7 @@ var
   CurrentVacancy: PVacancyNode;
   CurrentCandidate: PCandidateNode;
 begin
+  SaveIDsToFile();
   AssignFile(FVacancies, 'vacancies.TVacancy');
   try
     Rewrite(FVacancies);

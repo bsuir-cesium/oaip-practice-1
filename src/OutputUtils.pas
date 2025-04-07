@@ -5,26 +5,55 @@ interface
 uses
   CoreTypes;
 
+procedure ShowVacancyDetailed(Vacancy: PVacancy);
+procedure ShowCandidateDetailed(Candidate: PCandidate);
 procedure ShowAllVacancies(VacanciesHead: PVacancyNode);
 procedure ShowAllCandidates(CandidatesHead: PCandidateNode);
 
 implementation
 
 uses
-  SysUtils, Windows;
+  SysUtils;
 
 function BoolToYesNo(Value: Boolean): string;
 begin
-  if Value then
-    Result := 'Да'
-  else
-    Result := 'Нет';
+  if Value then Result := 'Да' else Result := 'Нет';
+end;
+
+procedure ShowVacancyDetailed(Vacancy: PVacancy);
+begin
+  if Vacancy = nil then Exit;
+
+  Writeln('ID: ', Vacancy^.ID);
+  Writeln('Компания: ', Vacancy^.CompanyName);
+  Writeln('Специальность: ', Vacancy^.Specialty);
+  Writeln('Должность: ', Vacancy^.Position);
+  Writeln('Оклад: ', Vacancy^.Salary:0:2);
+  Writeln('Дней отпуска: ', Vacancy^.VacationDays);
+  Writeln('Требуется высшее: ', BoolToYesNo(Vacancy^.RequiresHigherEducation));
+  Writeln('Возрастной диапазон: ', Vacancy^.MinAge, '-', Vacancy^.MaxAge);
+  Writeln('======================================');
+  Writeln;
+end;
+
+procedure ShowCandidateDetailed(Candidate: PCandidate);
+begin
+  if Candidate = nil then Exit;
+
+  Writeln('ID: ', Candidate^.ID);
+  Writeln('ФИО: ', Candidate^.FullName);
+  Writeln('Дата рождения: ', DateToStr(Candidate^.BirthDate));
+  Writeln('Специальность: ', Candidate^.Specialty);
+  Writeln('Высшее образование: ', BoolToYesNo(Candidate^.HasHigherEducation));
+  Writeln('Желаемая должность: ', Candidate^.DesiredPosition);
+  Writeln('Минимальный оклад: ', Candidate^.MinSalary:0:2);
+  Writeln('======================================');
+  Writeln;
 end;
 
 procedure ShowAllVacancies(VacanciesHead: PVacancyNode);
 var
   Current: PVacancyNode;
-  i: Integer;
 begin
   if VacanciesHead = nil then
   begin
@@ -32,37 +61,20 @@ begin
     Exit;
   end;
 
-  Writeln('Список вакансий:');
-  Writeln('==============================================================================================================');
-  Writeln('| Компания           | Специальность      | Должность          | Оклад     | Отпуск | Образование | Возраст   |');
-  Writeln('==============================================================================================================');
+  Writeln('========== ВАКАНСИИ ==========');
+  Writeln;
 
   Current := VacanciesHead;
-  i := 1;
   while Current <> nil do
   begin
-    with Current^.Data^ do
-    begin
-      WriteLn(Format('| %-18s | %-18s | %-18s | %-9.2f | %-6d | %-11s | %d-%d     |',
-        [CompanyName,
-         Specialty,
-         Position,
-         Salary,
-         VacationDays,
-         BoolToYesNo(RequiresHigherEducation),
-         MinAge,
-         MaxAge]));
-    end;
+    ShowVacancyDetailed(Current^.Data);
     Current := Current^.Next;
-    Inc(i);
   end;
-  Writeln('==============================================================================================================');
 end;
 
 procedure ShowAllCandidates(CandidatesHead: PCandidateNode);
 var
   Current: PCandidateNode;
-  i: Integer;
 begin
   if CandidatesHead = nil then
   begin
@@ -70,29 +82,15 @@ begin
     Exit;
   end;
 
-  Writeln('Список кандидатов:');
-  Writeln('======================================================================================================');
-  Writeln('| ФИО               | Дата рождения | Специальность | Образование | Должность       | Мин. оклад   |');
-  Writeln('======================================================================================================');
+  Writeln('========== КАНДИДАТЫ ==========');
+  Writeln;
 
   Current := CandidatesHead;
-  i := 1;
   while Current <> nil do
   begin
-    with Current^.Data^ do
-    begin
-      WriteLn(Format('| %-18s | %-13s | %-14s | %-11s | %-16s | %-12.2f |',
-        [FullName,
-         DateToStr(BirthDate),
-         Specialty,
-         BoolToYesNo(HasHigherEducation),
-         DesiredPosition,
-         MinSalary]));
-    end;
+    ShowCandidateDetailed(Current^.Data);
     Current := Current^.Next;
-    Inc(i);
   end;
-  Writeln('======================================================================================================');
 end;
 
 end.

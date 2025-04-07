@@ -29,6 +29,7 @@ var
 begin
   New(NewVacancy);
   try
+    NewVacancy^.ID := GetNextVacancyID();
     Write('Название компании: ');
     Readln(NewVacancy^.CompanyName);
     Write('Специальность: ');
@@ -65,6 +66,7 @@ var
 begin
   New(NewCandidate);
   try
+    NewCandidate^.ID := GetNextCandidateID;
     Write('ФИО кандидата: ');
     Readln(NewCandidate^.FullName);
     repeat

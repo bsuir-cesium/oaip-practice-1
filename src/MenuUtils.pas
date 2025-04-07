@@ -6,7 +6,7 @@ uses
   CoreTypes, FileUtils, InputUtils, OutputUtils;
 
 procedure ShowMainMenu;
-procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode;
+procedure ShowAddRecordSubmenu(var VacanciesHead: PVacancyNode;
   var CandidatesHead: PCandidateNode);
 
 implementation
@@ -63,7 +63,7 @@ begin
   until False;
 end;
 
-procedure ShowAddRecordMenu(var VacanciesHead: PVacancyNode;
+procedure ShowAddRecordSubmenu(var VacanciesHead: PVacancyNode;
   var CandidatesHead: PCandidateNode);
 var
   Choice: Integer;
@@ -89,6 +89,8 @@ begin
     end;
   until False;
 end;
+
+
 
 procedure ShowMainMenu;
 var
@@ -121,8 +123,12 @@ begin
       3 .. 4:
         Writeln('debug');
       5:
-        ShowAddRecordMenu(VacancyHead, CandidateHead);
-      6 .. 8:
+        ShowAddRecordSubmenu(VacancyHead, CandidateHead);
+      6:
+        Writeln('debug');
+      7:
+        Writeln('debug');
+      8:
         Writeln('debug');
       9 .. 10:
         begin
