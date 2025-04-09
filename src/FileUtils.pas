@@ -3,10 +3,12 @@ unit FileUtils;
 interface
 
 uses
-  SysUtils, CoreTypes;
+  SysUtils, CoreTypes, ListUtils;
 
-procedure LoadAllData(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
-procedure SaveAllData(VacanciesHead: PVacancyNode; CandidatesHead: PCandidateNode);
+procedure LoadAllData(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode);
+procedure SaveAllData(VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode);
 
 implementation
 
@@ -28,7 +30,8 @@ procedure LoadIDsFromFile;
 var
   F: TextFile;
 begin
-  if not FileExists('ids.dat') then Exit;
+  if not FileExists('ids.dat') then
+    Exit;
 
   AssignFile(F, 'ids.dat');
   try
@@ -40,14 +43,13 @@ begin
   end;
 end;
 
-procedure LoadAllData(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+procedure LoadAllData(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode);
 var
   FVacancies: file of TVacancy;
   FCandidates: file of TCandidate;
   Vacancy: TVacancy;
   Candidate: TCandidate;
-  NewVacancyNode: PVacancyNode;
-  NewCandidateNode: PCandidateNode;
 begin
   LoadIDsFromFile;
   if FileExists('vacancies.TVacancy') then
@@ -58,12 +60,7 @@ begin
       while not Eof(FVacancies) do
       begin
         Read(FVacancies, Vacancy);
-
-        New(NewVacancyNode);
-        New(NewVacancyNode^.Data);
-        NewVacancyNode^.Data^ := Vacancy;
-        NewVacancyNode^.Next := VacanciesHead;
-        VacanciesHead := NewVacancyNode;
+        AppendVacancy(VacanciesHead, Vacancy);
       end;
     finally
       CloseFile(FVacancies);
@@ -78,12 +75,7 @@ begin
       while not Eof(FCandidates) do
       begin
         Read(FCandidates, Candidate);
-
-        New(NewCandidateNode);
-        New(NewCandidateNode^.Data);
-        NewCandidateNode^.Data^ := Candidate;
-        NewCandidateNode^.Next := CandidatesHead;
-        CandidatesHead := NewCandidateNode;
+        AppendCandidate(CandidatesHead, Candidate);
       end;
     finally
       CloseFile(FCandidates);
@@ -91,7 +83,8 @@ begin
   end;
 end;
 
-procedure SaveAllData(VacanciesHead: PVacancyNode; CandidatesHead: PCandidateNode);
+procedure SaveAllData(VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode);
 var
   FVacancies: file of TVacancy;
   FCandidates: file of TCandidate;

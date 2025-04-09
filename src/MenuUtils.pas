@@ -88,7 +88,8 @@ begin
   until False;
 end;
 
-procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode);
 var
   Choice, ID: Integer;
 begin
@@ -102,28 +103,29 @@ begin
 
     case Choice of
       1:
-      begin
-        Write('Введите ID вакансии: ');
-        Readln(ID);
-        if DeleteVacancy(VacanciesHead, ID) <> -1 then
-          Writeln('Вакансия ', ID, ' удалена!')
-        else
-          Writeln('Вакансия не найдена!');
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          Write('Введите ID вакансии: ');
+          Readln(ID);
+          if DeleteVacancy(VacanciesHead, ID) <> -1 then
+            Writeln('Вакансия ', ID, ' удалена!')
+          else
+            Writeln('Вакансия не найдена!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       2:
-      begin
-        Write('Введите ID кандидата: ');
-        Readln(ID);
-        if DeleteVacancy(VacanciesHead, ID) <> -1 then
-          Writeln('Кандидат ', ID, ' удалён!')
-        else
-          Writeln('Кандидат не найден!');
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
-      3: Exit;
+        begin
+          Write('Введите ID кандидата: ');
+          Readln(ID);
+          if DeleteVacancy(VacanciesHead, ID) <> -1 then
+            Writeln('Кандидат ', ID, ' удалён!')
+          else
+            Writeln('Кандидат не найден!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      3:
+        Exit;
     end;
   until False;
 end;

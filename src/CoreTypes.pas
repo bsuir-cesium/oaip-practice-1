@@ -16,6 +16,7 @@ type
     MinAge: Integer;
     MaxAge: Integer;
   end;
+
   PVacancy = ^TVacancy;
 
   TCandidate = record
@@ -27,15 +28,18 @@ type
     DesiredPosition: string[50];
     MinSalary: Double;
   end;
+
   PCandidate = ^TCandidate;
 
   PVacancyNode = ^TVacancyNode;
+
   TVacancyNode = record
     Data: PVacancy;
     Next: PVacancyNode;
   end;
 
   PCandidateNode = ^TCandidateNode;
+
   TCandidateNode = record
     Data: PCandidate;
     Next: PCandidateNode;
@@ -47,9 +51,6 @@ var
 
 function GetNextVacancyID: Integer;
 function GetNextCandidateID: Integer;
-
-procedure ClearVacancies(var Head: PVacancyNode);
-procedure ClearCandidates(var Head: PCandidateNode);
 
 implementation
 
@@ -63,32 +64,6 @@ function GetNextCandidateID: Integer;
 begin
   Inc(LastCandidateID);
   Result := LastCandidateID;
-end;
-
-procedure ClearVacancies(var Head: PVacancyNode);
-var
-  Temp: PVacancyNode;
-begin
-  while Head <> nil do
-  begin
-    Temp := Head;
-    Head := Head^.Next;
-    Dispose(Temp^.Data);
-    Dispose(Temp);
-  end;
-end;
-
-procedure ClearCandidates(var Head: PCandidateNode);
-var
-  Temp: PCandidateNode;
-begin
-  while Head <> nil do
-  begin
-    Temp := Head;
-    Head := Head^.Next;
-    Dispose(Temp^.Data);
-    Dispose(Temp);
-  end;
 end;
 
 end.

@@ -17,12 +17,16 @@ uses
 
 function BoolToYesNo(Value: Boolean): string;
 begin
-  if Value then Result := 'Да' else Result := 'Нет';
+  if Value then
+    Result := 'Да'
+  else
+    Result := 'Нет';
 end;
 
 procedure ShowVacancyDetailed(Vacancy: PVacancy);
 begin
-  if Vacancy = nil then Exit;
+  if Vacancy = nil then
+    Exit;
 
   Writeln('ID: ', Vacancy^.ID);
   Writeln('Компания: ', Vacancy^.CompanyName);
@@ -38,7 +42,8 @@ end;
 
 procedure ShowCandidateDetailed(Candidate: PCandidate);
 begin
-  if Candidate = nil then Exit;
+  if Candidate = nil then
+    Exit;
 
   Writeln('ID: ', Candidate^.ID);
   Writeln('ФИО: ', Candidate^.FullName);
