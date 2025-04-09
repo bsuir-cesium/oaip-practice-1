@@ -3,12 +3,13 @@ unit OutputUtils;
 interface
 
 uses
-  CoreTypes;
+  CoreTypes, ListUtils;
 
-procedure ShowVacancyDetailed(Vacancy: PVacancy);
+procedure ShowVacancyDetailed(Vacancy: PVacancy; CompaniesHead: PCompanyNode);
 procedure ShowCandidateDetailed(Candidate: PCandidate);
-procedure ShowAllVacancies(VacanciesHead: PVacancyNode);
+procedure ShowAllVacancies(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
 procedure ShowAllCandidates(CandidatesHead: PCandidateNode);
+procedure ShowAllCompanies(CompaniesHead: PCompanyNode);
 
 implementation
 
@@ -23,13 +24,13 @@ begin
     Result := 'Нет';
 end;
 
-procedure ShowVacancyDetailed(Vacancy: PVacancy);
+procedure ShowVacancyDetailed(Vacancy: PVacancy; CompaniesHead: PCompanyNode);
 begin
   if Vacancy = nil then
     Exit;
 
   Writeln('ID: ', Vacancy^.ID);
-  Writeln('Компания: ', Vacancy^.CompanyName);
+  Writeln('Компания: ', GetCompanyNameById(CompaniesHead, Vacancy^.CompanyID));
   Writeln('Специальность: ', Vacancy^.Specialty);
   Writeln('Должность: ', Vacancy^.Position);
   Writeln('Оклад: ', Vacancy^.Salary:0:2);
@@ -56,7 +57,18 @@ begin
   Writeln;
 end;
 
-procedure ShowAllVacancies(VacanciesHead: PVacancyNode);
+procedure ShowCompanyDetailed(Company: PCompany);
+begin
+  if Company = nil then
+    Exit;
+
+  Writeln('ID: ', Company^.ID);
+  Writeln('Название: ', Company^.Name);
+  Writeln('======================================');
+  Writeln;
+end;
+
+procedure ShowAllVacancies(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
 var
   Current: PVacancyNode;
 begin
@@ -72,7 +84,7 @@ begin
   Current := VacanciesHead;
   while Current <> nil do
   begin
-    ShowVacancyDetailed(Current^.Data);
+    ShowVacancyDetailed(Current^.Data, CompaniesHead);
     Current := Current^.Next;
   end;
 end;
@@ -94,6 +106,27 @@ begin
   while Current <> nil do
   begin
     ShowCandidateDetailed(Current^.Data);
+    Current := Current^.Next;
+  end;
+end;
+
+procedure ShowAllCompanies(CompaniesHead: PCompanyNode);
+var
+  Current: PCompanyNode;
+begin
+  if CompaniesHead = nil then
+  begin
+    Writeln('Список компаний пуст.');
+    Exit;
+  end;
+
+  Writeln('========== КОМПАНИИ ==========');
+  Writeln;
+
+  Current := CompaniesHead;
+  while Current <> nil do
+  begin
+    ShowCompanyDetailed(Current^.Data);
     Current := Current^.Next;
   end;
 end;

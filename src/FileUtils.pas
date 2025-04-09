@@ -6,9 +6,9 @@ uses
   SysUtils, CoreTypes, ListUtils;
 
 procedure LoadAllData(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 procedure SaveAllData(VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode);
+  CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 
 implementation
 
@@ -21,6 +21,7 @@ begin
     Rewrite(F);
     Writeln(F, LastVacancyID);
     Writeln(F, LastCandidateID);
+    Writeln(F, LastCompanyID);
   finally
     CloseFile(F);
   end;
@@ -38,18 +39,21 @@ begin
     Reset(F);
     Readln(F, LastVacancyID);
     Readln(F, LastCandidateID);
+    Readln(F, LastCompanyID);
   finally
     CloseFile(F);
   end;
 end;
 
 procedure LoadAllData(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   FVacancies: file of TVacancy;
   FCandidates: file of TCandidate;
+  FCompanies: file of TCompany;
   Vacancy: TVacancy;
   Candidate: TCandidate;
+  Company: TCompany;
 begin
   LoadIDsFromFile;
   if FileExists('vacancies.TVacancy') then
@@ -81,15 +85,32 @@ begin
       CloseFile(FCandidates);
     end;
   end;
+
+  if FileExists('companies.TCompany') then
+  begin
+    AssignFile(FCompanies, 'companies.TCompany');
+    try
+      Reset(FCompanies);
+      while not Eof(FCompanies) do
+      begin
+        Read(FCompanies, Company);
+        AppendCompany(CompaniesHead, Company);
+      end;
+    finally
+      CloseFile(FCompanies);
+    end;
+  end;
 end;
 
 procedure SaveAllData(VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode);
+  CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   FVacancies: file of TVacancy;
   FCandidates: file of TCandidate;
+  FCompanies: file of TCompany;
   CurrentVacancy: PVacancyNode;
   CurrentCandidate: PCandidateNode;
+  CurrentCompany: PCompanyNode;
 begin
   SaveIDsToFile();
   AssignFile(FVacancies, 'vacancies.TVacancy');
@@ -116,6 +137,19 @@ begin
     end;
   finally
     CloseFile(FCandidates);
+  end;
+
+  AssignFile(FCompanies, 'companies.TCompany');
+  try
+    Rewrite(FCompanies);
+    CurrentCompany := CompaniesHead;
+    while CurrentCompany <> nil do
+    begin
+      Write(FCompanies, CurrentCompany^.Data^);
+      CurrentCompany := CurrentCompany^.Next;
+    end;
+  finally
+    CloseFile(FCompanies);
   end;
 end;
 

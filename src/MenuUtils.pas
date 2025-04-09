@@ -25,7 +25,7 @@ begin
 end;
 
 procedure ShowViewSubmenu(VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode);
+  CandidatesHead: PCandidateNode; CompaniesHead: PCompanyNode);
 var
   Choice: Integer;
 begin
@@ -33,7 +33,8 @@ begin
     ClearScreen;
     Writeln('1. Просмотр вакансий');
     Writeln('2. Просмотр кандидатов');
-    Writeln('3. Назад');
+    Writeln('3. Просмотр компаний');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
@@ -41,7 +42,7 @@ begin
       1:
         begin
           ClearScreen;
-          ShowAllVacancies(VacanciesHead);
+          ShowAllVacancies(VacanciesHead, CompaniesHead);
           Writeln('Нажмите Enter для продолжения...');
           Readln;
         end;
@@ -53,6 +54,13 @@ begin
           Readln;
         end;
       3:
+        begin
+          ClearScreen;
+          ShowAllCompanies(CompaniesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      0:
         Exit;
     else
       Writeln('Неверный выбор!');
@@ -62,7 +70,7 @@ begin
 end;
 
 procedure ShowAddRecordSubmenu(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   Choice: Integer;
 begin
@@ -70,16 +78,19 @@ begin
     ClearScreen;
     Writeln('1. Добавить вакансию');
     Writeln('2. Добавить кандидата');
-    Writeln('3. Назад');
+    Writeln('3. Добавить компанию');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
     case Choice of
       1:
-        AddNewVacancy(VacanciesHead);
+        AddNewVacancy(VacanciesHead, CompaniesHead);
       2:
         AddNewCandidate(CandidatesHead);
       3:
+        AddNewCompany(CompaniesHead);
+      0:
         Exit;
     else
       Writeln('Неверный выбор!');
@@ -135,9 +146,11 @@ var
   Choice: Integer;
   VacancyHead: PVacancyNode;
   CandidateHead: PCandidateNode;
+  CompanyHead: PCompanyNode;
 begin
   VacancyHead := nil;
   CandidateHead := nil;
+  CompanyHead := nil;
   repeat
     ClearScreen;
     Writeln(' 1. Чтение данных из файла');
@@ -155,13 +168,13 @@ begin
 
     case Choice of
       1:
-        LoadAllData(VacancyHead, CandidateHead);
+        LoadAllData(VacancyHead, CandidateHead, CompanyHead);
       2:
-        ShowViewSubmenu(VacancyHead, CandidateHead);
+        ShowViewSubmenu(VacancyHead, CandidateHead, CompanyHead);
       3 .. 4:
         Writeln('debug');
       5:
-        ShowAddRecordSubmenu(VacancyHead, CandidateHead);
+        ShowAddRecordSubmenu(VacancyHead, CandidateHead, CompanyHead);
       6:
         ShowDeleteSubmenu(VacancyHead, CandidateHead);
       7:
@@ -171,10 +184,11 @@ begin
       9 .. 10:
         begin
           if Choice = 10 then
-            SaveAllData(VacancyHead, CandidateHead);
+            SaveAllData(VacancyHead, CandidateHead, CompanyHead);
 
           ClearVacancies(VacancyHead);
           ClearCandidates(CandidateHead);
+          ClearCompanies(CompanyHead);
 
           Exit;
         end

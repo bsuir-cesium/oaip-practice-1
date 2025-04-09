@@ -5,8 +5,9 @@ interface
 uses
   CoreTypes, ListUtils, SysUtils;
 
-procedure AddNewVacancy(var VacanciesHead: PVacancyNode);
+procedure AddNewVacancy(var VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
 procedure AddNewCandidate(var CandidatesHead: PCandidateNode);
+procedure AddNewCompany(var CompaniesHead: PCompanyNode);
 
 implementation
 
@@ -23,13 +24,20 @@ begin
   Result := Boolean(InputFlag);
 end;
 
-procedure AddNewVacancy(var VacanciesHead: PVacancyNode);
+procedure AddNewVacancy(var VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
 var
   NewVacancy: TVacancy;
+  CompanyID: Integer;
 begin
   NewVacancy.ID := GetNextVacancyID();
-  Write('Название компании: ');
-  Readln(NewVacancy.CompanyName);
+  Write('Введите ID компании: ');
+  Readln(CompanyID);
+
+  if not CompanyExists(CompaniesHead, CompanyID) then
+  begin
+    Writeln('Ошибка! Компания не существует!');
+    Exit;
+  end;
   Write('Специальность: ');
   Readln(NewVacancy.Specialty);
   Write('Должность: ');
@@ -45,6 +53,7 @@ begin
   Write('Максимальный возраст: ');
   Readln(NewVacancy.MaxAge);
 
+  NewVacancy.CompanyID := CompanyID;
   AppendVacancy(VacanciesHead, NewVacancy);
 end;
 
@@ -73,6 +82,17 @@ begin
   Readln(NewCandidate.MinSalary);
 
   AppendCandidate(CandidatesHead, NewCandidate);
+end;
+
+procedure AddNewCompany(var CompaniesHead: PCompanyNode);
+var
+  NewCompany: TCompany;
+begin
+  NewCompany.ID := GetNextCompanyID();
+  Write('Название компании: ');
+  Readln(NewCompany.Name);
+
+  AppendCompany(CompaniesHead, NewCompany);
 end;
 
 end.

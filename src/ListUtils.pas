@@ -7,12 +7,17 @@ uses
 
 procedure ClearVacancies(var Head: PVacancyNode);
 procedure ClearCandidates(var Head: PCandidateNode);
+procedure ClearCompanies(var Head: PCompanyNode);
 
 function DeleteVacancy(var Head: PVacancyNode; ID: Integer): Integer;
 function DeleteCandidate(var Head: PCandidateNode; ID: Integer): Integer;
 
 procedure AppendVacancy(var Head: PVacancyNode; const Data: TVacancy);
 procedure AppendCandidate(var Head: PCandidateNode; const Data: TCandidate);
+procedure AppendCompany(var Head: PCompanyNode; const Data: TCompany);
+
+function CompanyExists(Head: PCompanyNode; ID: Integer): Boolean;
+function GetCompanyNameByID(Head: PCompanyNode; const ID: Integer): String;
 
 implementation
 
@@ -32,6 +37,19 @@ end;
 procedure ClearCandidates(var Head: PCandidateNode);
 var
   Temp: PCandidateNode;
+begin
+  while Head <> nil do
+  begin
+    Temp := Head;
+    Head := Head^.Next;
+    Dispose(Temp^.Data);
+    Dispose(Temp);
+  end;
+end;
+
+procedure ClearCompanies(var Head: PCompanyNode);
+var
+  Temp: PCompanyNode;
 begin
   while Head <> nil do
   begin
@@ -151,6 +169,44 @@ begin
     while Current^.Next <> nil do
       Current := Current^.Next;
     Current^.Next := NewNode;
+  end;
+end;
+
+procedure AppendCompany(var Head: PCompanyNode; const Data: TCompany);
+var
+  NewNode, Current: PCompanyNode;
+begin
+  New(NewNode);
+  New(NewNode^.Data);
+  NewNode^.Data^ := Data;
+  NewNode^.Next := nil;
+  if Head = nil then
+    Head := NewNode
+  else
+  begin
+    Current := Head;
+    while Current^.Next <> nil do
+      Current := Current^.Next;
+    Current^.Next := NewNode;
+  end;
+end;
+
+function CompanyExists(Head: PCompanyNode; ID: Integer): Boolean;
+begin
+  while Head <> nil do
+  begin
+    if Head^.Data^.ID = ID then Exit(True);
+    Head := Head^.Next;
+  end;
+  Result := False;
+end;
+
+function GetCompanyNameByID(Head: PCompanyNode; const ID: Integer): String;
+begin
+  while Head <> nil do
+  begin
+    if Head^.Data^.ID = ID then Exit(Head^.Data^.Name);
+    Head := Head^.Next;
   end;
 end;
 
