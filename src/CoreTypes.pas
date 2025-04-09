@@ -3,11 +3,23 @@ unit CoreTypes;
 interface
 
 type
+  TCompany = record
+    ID: Integer;
+    Name: string[50];
+  end;
+  PCompany = ^TCompany;
+
+  PCompanyNode = ^TCompanyNode;
+  TCompanyNode = record
+    Data: PCompany;
+    Next: PCompanyNode;
+  end;
+
   THasEducation = Boolean;
 
   TVacancy = record
     ID: Integer;
-    CompanyName: string[50];
+    CompanyID: Integer;
     Specialty: string[50];
     Position: string[50];
     Salary: Double;
@@ -48,9 +60,11 @@ type
 var
   LastVacancyID: Integer = 0;
   LastCandidateID: Integer = 0;
+  LastCompanyID: Integer = 0;
 
 function GetNextVacancyID: Integer;
 function GetNextCandidateID: Integer;
+function GetNextCompanyID: Integer;
 
 implementation
 
@@ -64,6 +78,12 @@ function GetNextCandidateID: Integer;
 begin
   Inc(LastCandidateID);
   Result := LastCandidateID;
+end;
+
+function GetNextCompanyID: Integer;
+begin
+  Inc(LastCompanyID);
+  Result := LastCompanyID;
 end;
 
 end.
