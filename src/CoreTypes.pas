@@ -7,9 +7,11 @@ type
     ID: Integer;
     Name: string[50];
   end;
+
   PCompany = ^TCompany;
 
   PCompanyNode = ^TCompanyNode;
+
   TCompanyNode = record
     Data: PCompany;
     Next: PCompanyNode;

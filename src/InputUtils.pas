@@ -5,7 +5,8 @@ interface
 uses
   CoreTypes, ListUtils, SysUtils;
 
-procedure AddNewVacancy(var VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
+procedure AddNewVacancy(var VacanciesHead: PVacancyNode;
+  CompaniesHead: PCompanyNode);
 procedure AddNewCandidate(var CandidatesHead: PCandidateNode);
 procedure AddNewCompany(var CompaniesHead: PCompanyNode);
 
@@ -24,7 +25,8 @@ begin
   Result := Boolean(InputFlag);
 end;
 
-procedure AddNewVacancy(var VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
+procedure AddNewVacancy(var VacanciesHead: PVacancyNode;
+  CompaniesHead: PCompanyNode);
 var
   NewVacancy: TVacancy;
   CompanyID: Integer;

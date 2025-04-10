@@ -11,6 +11,10 @@ procedure ClearCompanies(var Head: PCompanyNode);
 
 function DeleteVacancy(var Head: PVacancyNode; ID: Integer): Integer;
 function DeleteCandidate(var Head: PCandidateNode; ID: Integer): Integer;
+function DeleteCompany(var CompaniesHead: PCompanyNode; CompanyID: Integer;
+  var VacanciesHead: PVacancyNode): Integer;
+function DeleteVacanciesByCompany(var VacanciesHead: PVacancyNode;
+  CompanyID: Integer): Integer;
 
 procedure AppendVacancy(var Head: PVacancyNode; const Data: TVacancy);
 procedure AppendCandidate(var Head: PCandidateNode; const Data: TCandidate);
@@ -134,6 +138,80 @@ begin
   end;
 end;
 
+function DeleteCompany(var CompaniesHead: PCompanyNode; CompanyID: Integer;
+  var VacanciesHead: PVacancyNode): Integer;
+var
+  Current, Prev: PCompanyNode;
+begin
+  if (CompaniesHead <> nil) and CompanyExists(CompaniesHead, CompanyID) then
+  begin
+    DeleteVacanciesByCompany(VacanciesHead, CompanyID);
+
+    if CompaniesHead^.Data^.ID = CompanyID then
+    begin
+      Current := CompaniesHead;
+      CompaniesHead := CompaniesHead^.Next;
+      Result := Current^.Data^.ID;
+      Dispose(Current^.Data);
+      Dispose(Current);
+      Exit;
+    end;
+
+    Prev := CompaniesHead;
+    Current := CompaniesHead^.Next;
+
+    while Current <> nil do
+    begin
+      if Current^.Data^.ID = CompanyID then
+      begin
+        Prev^.Next := Current^.Next;
+        Result := Current^.Data^.ID;
+        Dispose(Current^.Data);
+        Dispose(Current);
+        Exit;
+      end;
+
+      Prev := Current;
+      Current := Current^.Next;
+    end;
+  end
+  else
+    Result := -1
+end;
+
+function DeleteVacanciesByCompany(var VacanciesHead: PVacancyNode;
+  CompanyID: Integer): Integer;
+var
+  Current, Prev: PVacancyNode;
+  Count: Integer;
+begin
+  Count := 0;
+  Current := VacanciesHead;
+  Prev := nil;
+
+  while Current <> nil do
+  begin
+    if Current^.Data^.CompanyID = CompanyID then
+    begin
+      if Prev = nil then
+        VacanciesHead := Current^.Next
+      else
+        Prev^.Next := Current^.Next;
+
+      Dispose(Current^.Data);
+      Dispose(Current);
+      Inc(Count);
+    end
+    else
+    begin
+      Prev := Current;
+    end;
+    Current := Current^.Next;
+  end;
+
+  Result := Count;
+end;
+
 procedure AppendVacancy(var Head: PVacancyNode; const Data: TVacancy);
 var
   NewNode, Current: PVacancyNode;
@@ -195,7 +273,8 @@ function CompanyExists(Head: PCompanyNode; ID: Integer): Boolean;
 begin
   while Head <> nil do
   begin
-    if Head^.Data^.ID = ID then Exit(True);
+    if Head^.Data^.ID = ID then
+      Exit(True);
     Head := Head^.Next;
   end;
   Result := False;
@@ -205,7 +284,8 @@ function GetCompanyNameByID(Head: PCompanyNode; const ID: Integer): String;
 begin
   while Head <> nil do
   begin
-    if Head^.Data^.ID = ID then Exit(Head^.Data^.Name);
+    if Head^.Data^.ID = ID then
+      Exit(Head^.Data^.Name);
     Head := Head^.Next;
   end;
 end;

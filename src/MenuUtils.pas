@@ -100,7 +100,7 @@ begin
 end;
 
 procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   Choice, ID: Integer;
 begin
@@ -108,7 +108,8 @@ begin
     ClearScreen;
     Writeln('1. Удалить вакансию');
     Writeln('2. Удалить кандидата');
-    Writeln('3. Назад');
+    Writeln('3. Удалить компанию');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
@@ -136,6 +137,17 @@ begin
           Readln;
         end;
       3:
+        begin
+          Write('Введите ID компании: ');
+          Readln(ID);
+          if DeleteCompany(CompaniesHead, ID, VacanciesHead) <> -1 then
+            Writeln('Компания ', ID, ' удалена!')
+          else
+            Writeln('Компания не найдена!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      0:
         Exit;
     end;
   until False;
@@ -176,7 +188,7 @@ begin
       5:
         ShowAddRecordSubmenu(VacancyHead, CandidateHead, CompanyHead);
       6:
-        ShowDeleteSubmenu(VacancyHead, CandidateHead);
+        ShowDeleteSubmenu(VacancyHead, CandidateHead, CompanyHead);
       7:
         Writeln('debug');
       8:

@@ -7,7 +7,8 @@ uses
 
 procedure ShowVacancyDetailed(Vacancy: PVacancy; CompaniesHead: PCompanyNode);
 procedure ShowCandidateDetailed(Candidate: PCandidate);
-procedure ShowAllVacancies(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
+procedure ShowAllVacancies(VacanciesHead: PVacancyNode;
+  CompaniesHead: PCompanyNode);
 procedure ShowAllCandidates(CandidatesHead: PCandidateNode);
 procedure ShowAllCompanies(CompaniesHead: PCompanyNode);
 
@@ -68,7 +69,8 @@ begin
   Writeln;
 end;
 
-procedure ShowAllVacancies(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode);
+procedure ShowAllVacancies(VacanciesHead: PVacancyNode;
+  CompaniesHead: PCompanyNode);
 var
   Current: PVacancyNode;
 begin
