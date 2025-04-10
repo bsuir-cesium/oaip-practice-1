@@ -25,7 +25,7 @@ begin
 end;
 
 procedure ShowViewSubmenu(VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode);
+  CandidatesHead: PCandidateNode; CompaniesHead: PCompanyNode);
 var
   Choice: Integer;
 begin
@@ -33,7 +33,8 @@ begin
     ClearScreen;
     Writeln('1. Просмотр вакансий');
     Writeln('2. Просмотр кандидатов');
-    Writeln('3. Назад');
+    Writeln('3. Просмотр компаний');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
@@ -41,7 +42,7 @@ begin
       1:
         begin
           ClearScreen;
-          ShowAllVacancies(VacanciesHead);
+          ShowAllVacancies(VacanciesHead, CompaniesHead);
           Writeln('Нажмите Enter для продолжения...');
           Readln;
         end;
@@ -53,6 +54,13 @@ begin
           Readln;
         end;
       3:
+        begin
+          ClearScreen;
+          ShowAllCompanies(CompaniesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      0:
         Exit;
     else
       Writeln('Неверный выбор!');
@@ -62,7 +70,7 @@ begin
 end;
 
 procedure ShowAddRecordSubmenu(var VacanciesHead: PVacancyNode;
-  var CandidatesHead: PCandidateNode);
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   Choice: Integer;
 begin
@@ -70,16 +78,19 @@ begin
     ClearScreen;
     Writeln('1. Добавить вакансию');
     Writeln('2. Добавить кандидата');
-    Writeln('3. Назад');
+    Writeln('3. Добавить компанию');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
     case Choice of
       1:
-        AddNewVacancy(VacanciesHead);
+        AddNewVacancy(VacanciesHead, CompaniesHead);
       2:
         AddNewCandidate(CandidatesHead);
       3:
+        AddNewCompany(CompaniesHead);
+      0:
         Exit;
     else
       Writeln('Неверный выбор!');
@@ -88,7 +99,8 @@ begin
   until False;
 end;
 
-procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode; var CandidatesHead: PCandidateNode);
+procedure ShowDeleteSubmenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
 var
   Choice, ID: Integer;
 begin
@@ -96,34 +108,47 @@ begin
     ClearScreen;
     Writeln('1. Удалить вакансию');
     Writeln('2. Удалить кандидата');
-    Writeln('3. Назад');
+    Writeln('3. Удалить компанию');
+    Writeln('0. Назад');
     Write('Выберите: ');
     Readln(Choice);
 
     case Choice of
       1:
-      begin
-        Write('Введите ID вакансии: ');
-        Readln(ID);
-        if DeleteVacancy(VacanciesHead, ID) <> -1 then
-          Writeln('Вакансия ', ID, ' удалена!')
-        else
-          Writeln('Вакансия не найдена!');
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          Write('Введите ID вакансии: ');
+          Readln(ID);
+          if DeleteVacancy(VacanciesHead, ID) <> -1 then
+            Writeln('Вакансия ', ID, ' удалена!')
+          else
+            Writeln('Вакансия не найдена!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       2:
-      begin
-        Write('Введите ID кандидата: ');
-        Readln(ID);
-        if DeleteVacancy(VacanciesHead, ID) <> -1 then
-          Writeln('Кандидат ', ID, ' удалён!')
-        else
-          Writeln('Кандидат не найден!');
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
-      3: Exit;
+        begin
+          Write('Введите ID кандидата: ');
+          Readln(ID);
+          if DeleteVacancy(VacanciesHead, ID) <> -1 then
+            Writeln('Кандидат ', ID, ' удалён!')
+          else
+            Writeln('Кандидат не найден!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      3:
+        begin
+          Write('Введите ID компании: ');
+          Readln(ID);
+          if DeleteCompany(CompaniesHead, ID, VacanciesHead) <> -1 then
+            Writeln('Компания ', ID, ' удалена!')
+          else
+            Writeln('Компания не найдена!');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
+      0:
+        Exit;
     end;
   until False;
 end;
@@ -131,11 +156,13 @@ end;
 procedure ShowMainMenu;
 var
   Choice: Integer;
-  VacancyHead: PVacancyNode;
-  CandidateHead: PCandidateNode;
+  VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode;
+  CompaniesHead: PCompanyNode;
 begin
-  VacancyHead := nil;
-  CandidateHead := nil;
+  VacanciesHead := nil;
+  CandidatesHead := nil;
+  CompaniesHead := nil;
   repeat
     ClearScreen;
     Writeln(' 1. Чтение данных из файла');
@@ -153,15 +180,15 @@ begin
 
     case Choice of
       1:
-        LoadAllData(VacancyHead, CandidateHead);
+        LoadAllData(VacanciesHead, CandidatesHead, CompaniesHead);
       2:
-        ShowViewSubmenu(VacancyHead, CandidateHead);
+        ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       3 .. 4:
         Writeln('debug');
       5:
-        ShowAddRecordSubmenu(VacancyHead, CandidateHead);
+        ShowAddRecordSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       6:
-        ShowDeleteSubmenu(VacancyHead, CandidateHead);
+        ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       7:
         Writeln('debug');
       8:
@@ -169,10 +196,11 @@ begin
       9 .. 10:
         begin
           if Choice = 10 then
-            SaveAllData(VacancyHead, CandidateHead);
+            SaveAllData(VacanciesHead, CandidatesHead, CompaniesHead);
 
-          ClearVacancies(VacancyHead);
-          ClearCandidates(CandidateHead);
+          ClearVacancies(VacanciesHead);
+          ClearCandidates(CandidatesHead);
+          ClearCompanies(CompaniesHead);
 
           Exit;
         end

@@ -3,11 +3,25 @@ unit CoreTypes;
 interface
 
 type
+  TCompany = record
+    ID: Integer;
+    Name: string[50];
+  end;
+
+  PCompany = ^TCompany;
+
+  PCompanyNode = ^TCompanyNode;
+
+  TCompanyNode = record
+    Data: PCompany;
+    Next: PCompanyNode;
+  end;
+
   THasEducation = Boolean;
 
   TVacancy = record
     ID: Integer;
-    CompanyName: string[50];
+    CompanyID: Integer;
     Specialty: string[50];
     Position: string[50];
     Salary: Double;
@@ -16,6 +30,7 @@ type
     MinAge: Integer;
     MaxAge: Integer;
   end;
+
   PVacancy = ^TVacancy;
 
   TCandidate = record
@@ -27,15 +42,18 @@ type
     DesiredPosition: string[50];
     MinSalary: Double;
   end;
+
   PCandidate = ^TCandidate;
 
   PVacancyNode = ^TVacancyNode;
+
   TVacancyNode = record
     Data: PVacancy;
     Next: PVacancyNode;
   end;
 
   PCandidateNode = ^TCandidateNode;
+
   TCandidateNode = record
     Data: PCandidate;
     Next: PCandidateNode;
@@ -44,12 +62,11 @@ type
 var
   LastVacancyID: Integer = 0;
   LastCandidateID: Integer = 0;
+  LastCompanyID: Integer = 0;
 
 function GetNextVacancyID: Integer;
 function GetNextCandidateID: Integer;
-
-procedure ClearVacancies(var Head: PVacancyNode);
-procedure ClearCandidates(var Head: PCandidateNode);
+function GetNextCompanyID: Integer;
 
 implementation
 
@@ -65,30 +82,10 @@ begin
   Result := LastCandidateID;
 end;
 
-procedure ClearVacancies(var Head: PVacancyNode);
-var
-  Temp: PVacancyNode;
+function GetNextCompanyID: Integer;
 begin
-  while Head <> nil do
-  begin
-    Temp := Head;
-    Head := Head^.Next;
-    Dispose(Temp^.Data);
-    Dispose(Temp);
-  end;
-end;
-
-procedure ClearCandidates(var Head: PCandidateNode);
-var
-  Temp: PCandidateNode;
-begin
-  while Head <> nil do
-  begin
-    Temp := Head;
-    Head := Head^.Next;
-    Dispose(Temp^.Data);
-    Dispose(Temp);
-  end;
+  Inc(LastCompanyID);
+  Result := LastCompanyID;
 end;
 
 end.
