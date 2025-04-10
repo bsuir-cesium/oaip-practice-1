@@ -57,6 +57,9 @@ begin
 
   NewVacancy.CompanyID := CompanyID;
   AppendVacancy(VacanciesHead, NewVacancy);
+  Write('Вакансия с ID: ');
+  Write(NewVacancy.CompanyID);
+  Writeln(' была успешна создана!');
 end;
 
 procedure AddNewCandidate(var CandidatesHead: PCandidateNode);
@@ -84,6 +87,9 @@ begin
   Readln(NewCandidate.MinSalary);
 
   AppendCandidate(CandidatesHead, NewCandidate);
+  Write('Кандидат ' + NewCandidate.FullName + 'с ID: ');
+  Write(NewCandidate.ID);
+  Writeln(' был успешно создан!');
 end;
 
 procedure AddNewCompany(var CompaniesHead: PCompanyNode);
@@ -95,6 +101,9 @@ begin
   Readln(NewCompany.Name);
 
   AppendCompany(CompaniesHead, NewCompany);
+  Write('Компания ' + NewCompany.Name + ' с ID: ');
+  Write(NewCompany.ID);
+  Writeln(' была успешно создана!');
 end;
 
 end.
