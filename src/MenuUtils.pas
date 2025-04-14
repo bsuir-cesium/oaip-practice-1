@@ -85,11 +85,23 @@ begin
 
     case Choice of
       1:
+      begin
         AddNewVacancy(VacanciesHead, CompaniesHead);
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
       2:
+      begin
         AddNewCandidate(CandidatesHead);
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
       3:
+      begin
         AddNewCompany(CompaniesHead);
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
       0:
         Exit;
     else
@@ -153,6 +165,54 @@ begin
   until False;
 end;
 
+procedure ShowEditSubmenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode; var CompaniesHead: PCompanyNode);
+var
+  Choice, ID: Integer;
+begin
+  repeat
+    ClearScreen;
+    Writeln('1. Редактировать вакансию');
+    Writeln('2. Редактировать кандидата');
+    Writeln('3. Редактировать компанию');
+    Writeln('0. Назад');
+    Write('Выберите: ');
+    Readln(Choice);
+
+    case Choice of
+      1:
+      begin
+          Write('Введите ID вакансии: ');
+          Readln(ID);
+          EditVacancy(VacanciesHead, ID);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+      end;
+      2:
+      begin
+          Write('Введите ID кандидата: ');
+          Readln(ID);
+          EditCandidate(CandidatesHead, ID);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+      end;
+      3:
+      begin
+          Write('Введите ID вакансии: ');
+          Readln(ID);
+          EditCompany(CompaniesHead, ID);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+      end;
+      0:
+        Exit;
+    else
+      Writeln('Неверный выбор!');
+      Readln;
+    end;
+  until False;
+end;
+
 procedure ShowMainMenu;
 var
   Choice: Integer;
@@ -190,7 +250,7 @@ begin
       6:
         ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       7:
-        Writeln('debug');
+        ShowEditSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       8:
       begin
         FindAndSaveMatches(VacanciesHead, CandidatesHead, CompaniesHead);
