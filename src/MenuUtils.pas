@@ -3,7 +3,7 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils;
+  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils, Filters;
 
 procedure ShowMainMenu;
 
@@ -213,6 +213,89 @@ begin
   until False;
 end;
 
+procedure ShowVacancyFilters(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode; var FilteredVacancies: PVacancyNode);
+var
+  MinSalary: Double;
+  RequiresEducation: Boolean;
+  MinAge, MaxAge: Integer;
+  Specialty: string;
+begin
+  Write('Минимальный оклад: ');
+  Readln(MinSalary);
+  RequiresEducation := ReadBoolean('Требуется высшее образование (1-Да/0-Нет): ');
+  Write('Минимальный возраст: ');
+  Readln(MinAge);
+  Write('Максимальный возраст: ');
+  Readln(MaxAge);
+  Write('Специальность (часть названия): ');
+  Readln(Specialty);
+
+  FilterVacancies(VacanciesHead, MinSalary, RequiresEducation, MinAge, MaxAge, Specialty, FilteredVacancies);
+
+  if FilteredVacancies = nil then
+    Writeln('Нет подходящих вакансий')
+  else
+    ShowAllVacancies(FilteredVacancies, CompaniesHead);
+  ClearVacancies(FilteredVacancies);
+  Writeln('Нажмите Enter, чтобы продолжить...');
+  Readln;
+end;
+
+procedure ShowCandidateFilters(CandidatesHead: PCandidateNode; CompaniesHead: PCompanyNode; var FilteredCandidates: PCandidateNode);
+var
+  MinSalary: Double;
+  HasEducation: Boolean;
+  MinAge, MaxAge: Integer;
+  Specialty: string;
+begin
+  Write('Минимальный желаемый оклад: ');
+  Readln(MinSalary);
+  HasEducation := ReadBoolean('Наличие высшего образования (1-Да/0-Нет): ');
+  Write('Минимальный возраст: ');
+  Readln(MinAge);
+  Write('Максимальный возраст: ');
+  Readln(MaxAge);
+  Write('Специальность (часть названия): ');
+  Readln(Specialty);
+
+  Filters.FilterCandidates(CandidatesHead, MinSalary, HasEducation, MinAge, MaxAge, Specialty, FilteredCandidates);
+
+  if FilteredCandidates = nil then
+    Writeln('Нет подходящих кандидатов')
+  else
+    ShowAllCandidates(FilteredCandidates);
+  ClearCandidates(FilteredCandidates);
+  Writeln('Нажмите Enter, чтобы продолжить...');
+  Readln;
+end;
+
+procedure ShowFilterSubmenu(const VacanciesHead: PVacancyNode;
+  const CandidatesHead: PCandidateNode; const CompaniesHead: PCompanyNode);
+var
+  Choice: Integer;
+  FilteredVacancies: PVacancyNode;
+  FilteredCandidates: PCandidateNode;
+begin
+  FilteredVacancies := nil;
+  FilteredCandidates := nil;
+  repeat
+    ClearScreen;
+    Writeln('1. Фильтровать вакансии');
+    Writeln('2. Фильтровать кандидатов');
+    Writeln('0. Назад');
+    Write('Выберите тип данных: ');
+    Readln(Choice);
+
+    case Choice of
+      1: ShowVacancyFilters(VacanciesHead, CompaniesHead, FilteredVacancies);
+      2: ShowCandidateFilters(CandidatesHead, CompaniesHead, FilteredCandidates);
+      0: Exit;
+    else
+      Writeln('Неверный выбор!');
+    end;
+  until False;
+end;
+
 procedure ShowMainMenu;
 var
   DataLoaded: Boolean;
@@ -266,8 +349,10 @@ begin
         else
           ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       end;
-      3 .. 4:
+      3:
         Writeln('debug');
+      4:
+        ShowFilterSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       5:
         if not DataLoaded then
         begin
