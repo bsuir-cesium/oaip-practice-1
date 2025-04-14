@@ -12,6 +12,7 @@ procedure AddNewCompany(var CompaniesHead: PCompanyNode);
 procedure EditVacancy(VacanciesHead: PVacancyNode; ID: Integer);
 procedure EditCandidate(CandidatesHead: PCandidateNode; ID: Integer);
 procedure EditCompany(CompaniesHead: PCompanyNode; ID: Integer);
+function ReadBoolean(const Prompt: string): Boolean;
 
 implementation
 
