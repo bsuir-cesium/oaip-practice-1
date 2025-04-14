@@ -3,7 +3,7 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils;
+  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils;
 
 procedure ShowMainMenu;
 
@@ -192,7 +192,11 @@ begin
       7:
         Writeln('debug');
       8:
-        Writeln('debug');
+      begin
+        FindAndSaveMatches(VacanciesHead, CandidatesHead, CompaniesHead);
+        Writeln('Нажмите Enter для продолжения...');
+        Readln;
+      end;
       9 .. 10:
         begin
           if Choice = 10 then
