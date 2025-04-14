@@ -7,7 +7,8 @@ uses
   OutputUtils in 'OutputUtils.pas',
   CoreTypes in 'CoreTypes.pas',
   ListUtils in 'ListUtils.pas',
-  MatchUtils in 'MatchUtils.pas';
+  MatchUtils in 'MatchUtils.pas',
+  Filters in 'Filters.pas';
 
 begin
   ShowMainMenu;
