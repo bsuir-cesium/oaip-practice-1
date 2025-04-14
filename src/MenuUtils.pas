@@ -85,23 +85,23 @@ begin
 
     case Choice of
       1:
-      begin
-        AddNewVacancy(VacanciesHead, CompaniesHead);
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          AddNewVacancy(VacanciesHead, CompaniesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       2:
-      begin
-        AddNewCandidate(CandidatesHead);
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          AddNewCandidate(CandidatesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       3:
-      begin
-        AddNewCompany(CompaniesHead);
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          AddNewCompany(CompaniesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       0:
         Exit;
     else
@@ -181,29 +181,29 @@ begin
 
     case Choice of
       1:
-      begin
+        begin
           Write('Введите ID вакансии: ');
           Readln(ID);
           EditVacancy(VacanciesHead, ID);
           Writeln('Нажмите Enter для продолжения...');
           Readln;
-      end;
+        end;
       2:
-      begin
+        begin
           Write('Введите ID кандидата: ');
           Readln(ID);
           EditCandidate(CandidatesHead, ID);
           Writeln('Нажмите Enter для продолжения...');
           Readln;
-      end;
+        end;
       3:
-      begin
+        begin
           Write('Введите ID вакансии: ');
           Readln(ID);
           EditCompany(CompaniesHead, ID);
           Writeln('Нажмите Enter для продолжения...');
           Readln;
-      end;
+        end;
       0:
         Exit;
     else
@@ -215,14 +215,17 @@ end;
 
 procedure ShowMainMenu;
 var
+  DataLoaded: Boolean;
   Choice: Integer;
   VacanciesHead: PVacancyNode;
   CandidatesHead: PCandidateNode;
   CompaniesHead: PCompanyNode;
 begin
+  DataLoaded := False;
   VacanciesHead := nil;
   CandidatesHead := nil;
   CompaniesHead := nil;
+
   repeat
     ClearScreen;
     Writeln(' 1. Чтение данных из файла');
@@ -240,23 +243,64 @@ begin
 
     case Choice of
       1:
-        LoadAllData(VacanciesHead, CandidatesHead, CompaniesHead);
+        begin
+          if not DataLoaded then
+          begin
+            LoadAllData(VacanciesHead, CandidatesHead, CompaniesHead);
+            DataLoaded := True;
+            Writeln('Данные успешно загружены');
+          end
+          else
+            Writeln('Данные уже загружены');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       2:
-        ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+      begin
+        if not DataLoaded then
+        begin
+          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end
+        else
+          ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+      end;
       3 .. 4:
         Writeln('debug');
       5:
-        ShowAddRecordSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        if not DataLoaded then
+        begin
+          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end
+        else
+          ShowAddRecordSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       6:
-        ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        if not DataLoaded then
+        begin
+          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end
+        else
+          ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       7:
-        ShowEditSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        if not DataLoaded then
+        begin
+          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end
+        else
+          ShowEditSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       8:
-      begin
-        FindAndSaveMatches(VacanciesHead, CandidatesHead, CompaniesHead);
-        Writeln('Нажмите Enter для продолжения...');
-        Readln;
-      end;
+        begin
+          FindAndSaveMatches(VacanciesHead, CandidatesHead, CompaniesHead);
+          Writeln('Нажмите Enter для продолжения...');
+          Readln;
+        end;
       9 .. 10:
         begin
           if Choice = 10 then

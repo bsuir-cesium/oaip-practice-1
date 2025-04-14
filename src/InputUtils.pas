@@ -90,7 +90,7 @@ begin
   Readln(NewCandidate.MinSalary);
 
   AppendCandidate(CandidatesHead, NewCandidate);
-  Write('Кандидат ' + NewCandidate.FullName + 'с ID: ');
+  Write('Кандидат ' + NewCandidate.FullName + ' с ID: ');
   Write(NewCandidate.ID);
   Writeln(' был успешно создан!');
 end;
