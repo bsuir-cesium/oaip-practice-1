@@ -6,7 +6,8 @@ uses
   FileUtils in 'FileUtils.pas',
   OutputUtils in 'OutputUtils.pas',
   CoreTypes in 'CoreTypes.pas',
-  ListUtils in 'ListUtils.pas';
+  ListUtils in 'ListUtils.pas',
+  MatchUtils in 'MatchUtils.pas';
 
 begin
   ShowMainMenu;
