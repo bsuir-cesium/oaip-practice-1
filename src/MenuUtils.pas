@@ -3,7 +3,7 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils, Filters;
+  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils, Filters, SortUtils;
 
 procedure ShowMainMenu;
 
@@ -296,6 +296,94 @@ begin
   until False;
 end;
 
+procedure ShowSortMenu(var VacanciesHead: PVacancyNode;
+  var CandidatesHead: PCandidateNode; const CompaniesHead: PCompanyNode);
+var
+  Choice, FieldChoice, OrderChoice: Integer;
+  Order: TSortOrder;
+  CompareVacancyFunc: TCompareVacancyFunc;
+  CompareCandidateFunc: TCompareCandidateFunc;
+begin
+  repeat
+    ClearScreen;
+    Writeln('1. Сортировать вакансии');
+    Writeln('2. Сортировать кандидатов');
+    Writeln('0. Назад');
+    Write('Выберите тип данных: ');
+    Readln(Choice);
+
+    case Choice of
+      1:
+      begin
+        repeat
+          ClearScreen;
+          Writeln('Сортировка вакансий по:');
+          Writeln('1. Названию компании');
+          Writeln('2. Окладу');
+          Writeln('3. Максимальному возрасту');
+          Writeln('4. Минимальному возрасту');
+          Writeln('0. Назад');
+          Write('Выберите поле: ');
+          Readln(FieldChoice);
+
+          Writeln('1. По возрастанию');
+          Writeln('2. По убыванию');
+          Write('Выберите порядок: ');
+          Readln(OrderChoice);
+          Order := TSortOrder(OrderChoice - 1);
+
+          case FieldChoice of
+            1: CompareVacancyFunc := CompareVacancyBySalary;
+            2: CompareVacancyFunc := CompareVacancyBySalary;
+            3: CompareVacancyFunc := CompareVacancyByMaxAge;
+            4: CompareVacancyFunc := CompareVacancyByMinAge;
+            else Exit;
+          end;
+          if (FieldChoice >= 1) and (FieldChoice <= 4) then
+          begin
+            SortUtils.SortVacancies(VacanciesHead, CompareVacancyFunc, Order);
+            OutputUtils.ShowAllVacancies(VacanciesHead, CompaniesHead);
+            Write('Нажмите Enter...');
+            Readln;
+          end;
+        until False;
+      end;
+
+      2:
+      begin
+        repeat
+          ClearScreen;
+          Writeln('Сортировка кандидатов по:');
+          Writeln('1. Полному имени');
+          Writeln('2. Дате рождения');
+          Writeln('0. Назад');
+          Write('Выберите поле: ');
+          Readln(FieldChoice);
+
+          Writeln('1. По возрастанию');
+          Writeln('2. По убыванию');
+          Write('Выберите порядок: ');
+          Readln(OrderChoice);
+          Order := TSortOrder(OrderChoice - 1);
+
+          case FieldChoice of
+            1: CompareCandidateFunc := CompareCandidateByFullName;
+            2: CompareCandidateFunc := CompareCandidateByBirthDate;
+            else Exit;
+          end;
+          if (FieldChoice >= 1) and (FieldChoice <= 2) then
+          begin
+            SortUtils.SortCandidates(CandidatesHead, CompareCandidateFunc, Order);
+            OutputUtils.ShowAllCandidates(CandidatesHead);
+            Write('Нажмите Enter...');
+            Readln;
+          end;
+        until False;
+      end;
+    end;
+  until False;
+end;
+
 procedure ShowMainMenu;
 var
   DataLoaded: Boolean;
@@ -350,7 +438,7 @@ begin
           ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       end;
       3:
-        Writeln('debug');
+        ShowSortMenu(VacanciesHead, CandidatesHead, CompaniesHead);
       4:
         ShowFilterSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       5:
