@@ -104,6 +104,7 @@
         <DCCReference Include="ListUtils.pas"/>
         <DCCReference Include="MatchUtils.pas"/>
         <DCCReference Include="Filters.pas"/>
+        <DCCReference Include="SortUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
