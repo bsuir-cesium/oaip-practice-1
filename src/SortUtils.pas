@@ -15,8 +15,10 @@ function CompareVacancyBySalary(A, B: PVacancy; Order: TSortOrder): Integer;
 function CompareVacancyByMaxAge(A, B: PVacancy; Order: TSortOrder): Integer;
 function CompareVacancyByMinAge(A, B: PVacancy; Order: TSortOrder): Integer;
 
-function CompareCandidateByFullName(A, B: PCandidate; Order: TSortOrder): Integer;
-function CompareCandidateByBirthDate(A, B: PCandidate; Order: TSortOrder): Integer;
+function CompareCandidateByFullName(A, B: PCandidate;
+  Order: TSortOrder): Integer;
+function CompareCandidateByBirthDate(A, B: PCandidate;
+  Order: TSortOrder): Integer;
 
 procedure SortVacancies(var Head: PVacancyNode; Compare: TCompareVacancyFunc;
   Order: TSortOrder);
@@ -139,21 +141,21 @@ begin
     Result := -Result;
 end;
 
-//function CompareVacancyByCompanyName(A, B: PVacancy): Integer;
-//var
-//  NameA, NameB: String;
-//begin
-//  NameA := GetCompanyNameByID(A^.CompanyID);
-//  if  > B^.CompanyName then
-//    Result := 1
-//  else if A^.CompanyName < B^.CompanyName then
-//    Result := -1
-//  else
-//    Result := 0;
-//end;
+// function CompareVacancyByCompanyName(A, B: PVacancy): Integer;
+// var
+// NameA, NameB: String;
+// begin
+// NameA := GetCompanyNameByID(A^.CompanyID);
+// if  > B^.CompanyName then
+// Result := 1
+// else if A^.CompanyName < B^.CompanyName then
+// Result := -1
+// else
+// Result := 0;
+// end;
 
-procedure SortCandidates(var Head: PCandidateNode; Compare: TCompareCandidateFunc;
-  Order: TSortOrder);
+procedure SortCandidates(var Head: PCandidateNode;
+  Compare: TCompareCandidateFunc; Order: TSortOrder);
   procedure SplitList(Source: PCandidateNode; var Front, Back: PCandidateNode);
   var
     Fast, Slow: PCandidateNode;
@@ -227,7 +229,8 @@ begin
   MergeSort(Head);
 end;
 
-function CompareCandidateByFullName(A, B: PCandidate; Order: TSortOrder): Integer;
+function CompareCandidateByFullName(A, B: PCandidate;
+  Order: TSortOrder): Integer;
 begin
   if A^.FullName > B^.FullName then
     Result := 1
@@ -240,7 +243,8 @@ begin
     Result := -Result;
 end;
 
-function CompareCandidateByBirthDate(A, B: PCandidate; Order: TSortOrder): Integer;
+function CompareCandidateByBirthDate(A, B: PCandidate;
+  Order: TSortOrder): Integer;
 begin
   if A^.BirthDate > B^.BirthDate then
     Result := 1

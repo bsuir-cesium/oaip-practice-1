@@ -3,7 +3,9 @@ unit MenuUtils;
 interface
 
 uses
-  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils, Filters, SortUtils;
+  CoreTypes, FileUtils, InputUtils, OutputUtils, ListUtils, MatchUtils,
+  Filters,
+  SortUtils;
 
 procedure ShowMainMenu;
 
@@ -213,7 +215,8 @@ begin
   until False;
 end;
 
-procedure ShowVacancyFilters(VacanciesHead: PVacancyNode; CompaniesHead: PCompanyNode; var FilteredVacancies: PVacancyNode);
+procedure ShowVacancyFilters(VacanciesHead: PVacancyNode;
+  CompaniesHead: PCompanyNode; var FilteredVacancies: PVacancyNode);
 var
   MinSalary: Double;
   RequiresEducation: Boolean;
@@ -222,7 +225,8 @@ var
 begin
   Write('Минимальный оклад: ');
   Readln(MinSalary);
-  RequiresEducation := ReadBoolean('Требуется высшее образование (1-Да/0-Нет): ');
+  RequiresEducation :=
+    ReadBoolean('Требуется высшее образование (1-Да/0-Нет): ');
   Write('Минимальный возраст: ');
   Readln(MinAge);
   Write('Максимальный возраст: ');
@@ -230,7 +234,8 @@ begin
   Write('Специальность (часть названия): ');
   Readln(Specialty);
 
-  FilterVacancies(VacanciesHead, MinSalary, RequiresEducation, MinAge, MaxAge, Specialty, FilteredVacancies);
+  FilterVacancies(VacanciesHead, MinSalary, RequiresEducation, MinAge, MaxAge,
+    Specialty, FilteredVacancies);
 
   if FilteredVacancies = nil then
     Writeln('Нет подходящих вакансий')
@@ -241,7 +246,8 @@ begin
   Readln;
 end;
 
-procedure ShowCandidateFilters(CandidatesHead: PCandidateNode; CompaniesHead: PCompanyNode; var FilteredCandidates: PCandidateNode);
+procedure ShowCandidateFilters(CandidatesHead: PCandidateNode;
+  CompaniesHead: PCompanyNode; var FilteredCandidates: PCandidateNode);
 var
   MinSalary: Double;
   HasEducation: Boolean;
@@ -258,7 +264,8 @@ begin
   Write('Специальность (часть названия): ');
   Readln(Specialty);
 
-  Filters.FilterCandidates(CandidatesHead, MinSalary, HasEducation, MinAge, MaxAge, Specialty, FilteredCandidates);
+  Filters.FilterCandidates(CandidatesHead, MinSalary, HasEducation, MinAge,
+    MaxAge, Specialty, FilteredCandidates);
 
   if FilteredCandidates = nil then
     Writeln('Нет подходящих кандидатов')
@@ -287,9 +294,12 @@ begin
     Readln(Choice);
 
     case Choice of
-      1: ShowVacancyFilters(VacanciesHead, CompaniesHead, FilteredVacancies);
-      2: ShowCandidateFilters(CandidatesHead, CompaniesHead, FilteredCandidates);
-      0: Exit;
+      1:
+        ShowVacancyFilters(VacanciesHead, CompaniesHead, FilteredVacancies);
+      2:
+        ShowCandidateFilters(CandidatesHead, CompaniesHead, FilteredCandidates);
+      0:
+        Exit;
     else
       Writeln('Неверный выбор!');
     end;
@@ -314,72 +324,93 @@ begin
 
     case Choice of
       1:
-      begin
-        repeat
-          ClearScreen;
-          Writeln('Сортировка вакансий по:');
-          Writeln('1. Названию компании');
-          Writeln('2. Окладу');
-          Writeln('3. Максимальному возрасту');
-          Writeln('4. Минимальному возрасту');
-          Writeln('0. Назад');
-          Write('Выберите поле: ');
-          Readln(FieldChoice);
+        begin
+          repeat
+            ClearScreen;
+            Writeln('Сортировка вакансий по:');
+            Writeln('1. Названию компании');
+            Writeln('2. Окладу');
+            Writeln('3. Максимальному возрасту');
+            Writeln('4. Минимальному возрасту');
+            Writeln('0. Назад');
+            Write('Выберите поле: ');
+            Readln(FieldChoice);
 
-          Writeln('1. По возрастанию');
-          Writeln('2. По убыванию');
-          Write('Выберите порядок: ');
-          Readln(OrderChoice);
-          Order := TSortOrder(OrderChoice - 1);
+            Writeln('1. По возрастанию');
+            Writeln('2. По убыванию');
+            Write('Выберите порядок: ');
+            Readln(OrderChoice);
+            Order := TSortOrder(OrderChoice - 1);
 
-          case FieldChoice of
-            1: CompareVacancyFunc := CompareVacancyBySalary;
-            2: CompareVacancyFunc := CompareVacancyBySalary;
-            3: CompareVacancyFunc := CompareVacancyByMaxAge;
-            4: CompareVacancyFunc := CompareVacancyByMinAge;
-            else Exit;
-          end;
-          if (FieldChoice >= 1) and (FieldChoice <= 4) then
-          begin
-            SortUtils.SortVacancies(VacanciesHead, CompareVacancyFunc, Order);
-            OutputUtils.ShowAllVacancies(VacanciesHead, CompaniesHead);
-            Write('Нажмите Enter...');
-            Readln;
-          end;
-        until False;
-      end;
+            case FieldChoice of
+              1:
+                CompareVacancyFunc := CompareVacancyBySalary;
+              2:
+                CompareVacancyFunc := CompareVacancyBySalary;
+              3:
+                CompareVacancyFunc := CompareVacancyByMaxAge;
+              4:
+                CompareVacancyFunc := CompareVacancyByMinAge;
+              0:
+                Exit;
+            else
+              begin
+                Writeln('Невалидный выбор поля сортировки');
+                Write('Нажмите Enter для продолжения...');
+                Readln;
+              end;
+            end;
+            if (FieldChoice >= 1) and (FieldChoice <= 4) then
+            begin
+              SortUtils.SortVacancies(VacanciesHead, CompareVacancyFunc, Order);
+              OutputUtils.ShowAllVacancies(VacanciesHead, CompaniesHead);
+              Write('Нажмите Enter для продолжения...');
+              Readln;
+            end;
+          until False;
+        end;
 
       2:
-      begin
-        repeat
-          ClearScreen;
-          Writeln('Сортировка кандидатов по:');
-          Writeln('1. Полному имени');
-          Writeln('2. Дате рождения');
-          Writeln('0. Назад');
-          Write('Выберите поле: ');
-          Readln(FieldChoice);
+        begin
+          repeat
+            ClearScreen;
+            Writeln('Сортировка кандидатов по:');
+            Writeln('1. Полному имени');
+            Writeln('2. Дате рождения');
+            Writeln('0. Назад');
+            Write('Выберите поле: ');
+            Readln(FieldChoice);
 
-          Writeln('1. По возрастанию');
-          Writeln('2. По убыванию');
-          Write('Выберите порядок: ');
-          Readln(OrderChoice);
-          Order := TSortOrder(OrderChoice - 1);
+            Writeln('1. По возрастанию');
+            Writeln('2. По убыванию');
+            Write('Выберите порядок: ');
+            Readln(OrderChoice);
+            Order := TSortOrder(OrderChoice - 1);
 
-          case FieldChoice of
-            1: CompareCandidateFunc := CompareCandidateByFullName;
-            2: CompareCandidateFunc := CompareCandidateByBirthDate;
-            else Exit;
-          end;
-          if (FieldChoice >= 1) and (FieldChoice <= 2) then
-          begin
-            SortUtils.SortCandidates(CandidatesHead, CompareCandidateFunc, Order);
-            OutputUtils.ShowAllCandidates(CandidatesHead);
-            Write('Нажмите Enter...');
-            Readln;
-          end;
-        until False;
-      end;
+            case FieldChoice of
+              1:
+                CompareCandidateFunc := CompareCandidateByFullName;
+              2:
+                CompareCandidateFunc := CompareCandidateByBirthDate;
+              0:
+                Exit;
+            else
+              begin
+                Writeln('Невалидный выбор поля сортировки');
+                Write('Нажмите Enter для продолжения...');
+                Readln;
+              end;
+            end;
+            if (FieldChoice >= 1) and (FieldChoice <= 2) then
+            begin
+              SortUtils.SortCandidates(CandidatesHead,
+                CompareCandidateFunc, Order);
+              OutputUtils.ShowAllCandidates(CandidatesHead);
+              Write('Нажмите Enter...');
+              Readln;
+            end;
+          until False;
+        end;
     end;
   until False;
 end;
@@ -427,16 +458,16 @@ begin
           Readln;
         end;
       2:
-      begin
-        if not DataLoaded then
         begin
-          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
-          Writeln('Нажмите Enter для продолжения...');
-          Readln;
-        end
-        else
-          ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
-      end;
+          if not DataLoaded then
+          begin
+            Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
+            Writeln('Нажмите Enter для продолжения...');
+            Readln;
+          end
+          else
+            ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        end;
       3:
         ShowSortMenu(VacanciesHead, CandidatesHead, CompaniesHead);
       4:
