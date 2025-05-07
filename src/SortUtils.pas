@@ -141,19 +141,6 @@ begin
     Result := -Result;
 end;
 
-// function CompareVacancyByCompanyName(A, B: PVacancy): Integer;
-// var
-// NameA, NameB: String;
-// begin
-// NameA := GetCompanyNameByID(A^.CompanyID);
-// if  > B^.CompanyName then
-// Result := 1
-// else if A^.CompanyName < B^.CompanyName then
-// Result := -1
-// else
-// Result := 0;
-// end;
-
 procedure SortCandidates(var Head: PCandidateNode;
   Compare: TCompareCandidateFunc; Order: TSortOrder);
   procedure SplitList(Source: PCandidateNode; var Front, Back: PCandidateNode);

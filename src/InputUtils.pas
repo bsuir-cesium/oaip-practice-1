@@ -12,9 +12,22 @@ procedure AddNewCompany(var CompaniesHead: PCompanyNode);
 procedure EditVacancy(VacanciesHead: PVacancyNode; ID: Integer);
 procedure EditCandidate(CandidatesHead: PCandidateNode; ID: Integer);
 procedure EditCompany(CompaniesHead: PCompanyNode; ID: Integer);
+function ReadInteger(const Prompt: String): Integer;
 function ReadBoolean(const Prompt: string): Boolean;
 
 implementation
+
+function ReadInteger(const Prompt: String): Integer;
+var
+  InputStr: String;
+  InputValue: Integer;
+begin
+  repeat
+    Write(Prompt);
+    Readln(InputStr);
+  until TryStrToInt(InputStr, InputValue);
+  Result := InputValue;
+end;
 
 function ReadBoolean(const Prompt: string): Boolean;
 var
@@ -48,16 +61,15 @@ begin
   Readln(NewVacancy.Specialty);
   Write('Должность: ');
   Readln(NewVacancy.Position);
-  Write('Оклад: ');
-  Readln(NewVacancy.Salary);
-  Write('Дней отпуска: ');
-  Readln(NewVacancy.VacationDays);
+
+  NewVacancy.Salary := ReadInteger('Оклад: ');
+  NewVacancy.VacationDays := ReadInteger('Дней отпуска: ');
+
   NewVacancy.RequiresHigherEducation :=
     ReadBoolean('Требуется высшее образование (1-Да/0-Нет): ');
-  Write('Минимальный возраст: ');
-  Readln(NewVacancy.MinAge);
-  Write('Максимальный возраст: ');
-  Readln(NewVacancy.MaxAge);
+
+  NewVacancy.MinAge := ReadInteger('Минимальный возраст: ');
+  NewVacancy.MaxAge := ReadInteger('Максимальный возраст: ');
 
   NewVacancy.CompanyID := CompanyID;
   AppendVacancy(VacanciesHead, NewVacancy);
@@ -87,8 +99,8 @@ begin
     ReadBoolean('Наличие высшего образования (1-Да/0-Нет): ');
   Write('Желаемая должность: ');
   Readln(NewCandidate.DesiredPosition);
-  Write('Минимальный оклад: ');
-  Readln(NewCandidate.MinSalary);
+
+  NewCandidate.MinSalary := ReadInteger('Минимальный оклад: ');
 
   AppendCandidate(CandidatesHead, NewCandidate);
   Write('Кандидат ' + NewCandidate.FullName + ' с ID: ');
@@ -125,16 +137,15 @@ begin
       Readln(VacanciesHead^.Data^.Specialty);
       Write('Должность: ');
       Readln(VacanciesHead^.Data^.Position);
-      Write('Оклад: ');
-      Readln(VacanciesHead^.Data^.Salary);
-      Write('Дней отпуска: ');
-      Readln(VacanciesHead^.Data^.VacationDays);
+
+      VacanciesHead^.Data^.Salary := ReadInteger('Оклад: ');
+      VacanciesHead^.Data^.VacationDays := ReadInteger('Дней отпуска: ');
+
       VacanciesHead^.Data^.RequiresHigherEducation :=
         ReadBoolean('Требуется высшее образование (1-Да/0-Нет): ');
-      Write('Минимальный возраст: ');
-      Readln(VacanciesHead^.Data^.MinAge);
-      Write('Максимальный возраст: ');
-      Readln(VacanciesHead^.Data^.MaxAge);
+
+      VacanciesHead^.Data^.MinAge := ReadInteger('Минимальный возраст: ');
+      VacanciesHead^.Data^.MaxAge := ReadInteger('Максимальный возраст: ');
     end;
     VacanciesHead := VacanciesHead^.Next;
   end;
@@ -155,7 +166,7 @@ begin
   begin
     if CandidatesHead^.Data^.ID = ID then
     begin
-      isFinded := False;
+      isFinded := True;
       Write('ФИО кандидата: ');
       Readln(CandidatesHead^.Data^.FullName);
       repeat
@@ -169,9 +180,8 @@ begin
       CandidatesHead^.Data^.HasHigherEducation :=
         ReadBoolean('Наличие высшего образования (1-Да/0-Нет): ');
       Write('Желаемая должность: ');
-      Readln(CandidatesHead^.Data^.DesiredPosition);
-      Write('Минимальный оклад: ');
-      Readln(CandidatesHead^.Data^.MinSalary);
+
+      CandidatesHead^.Data^.MinSalary := ReadInteger('Минимальный оклад: ');
     end;
     CandidatesHead := CandidatesHead^.Next;
   end;

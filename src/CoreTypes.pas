@@ -59,6 +59,15 @@ type
     Next: PCandidateNode;
   end;
 
+  PDeficitStat = ^TDeficitStat;
+  TDeficitStat = record
+    Position: string;
+    Specialty: string;
+    VacancyCount: Integer;
+    CandidateCount: Integer;
+    Next: PDeficitStat;
+  end;
+
 var
   LastVacancyID: Integer = 0;
   LastCandidateID: Integer = 0;
