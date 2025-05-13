@@ -8,11 +8,8 @@ uses
 procedure FindAndSaveMatches(VacanciesHead: PVacancyNode;
   CandidatesHead: PCandidateNode; CompaniesHead: PCompanyNode);
 
-procedure FindDeficitSpecialties(
-  VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode;
-  var ResultHead: PDeficitStat
-);
+procedure FindDeficitSpecialties(VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode; var ResultHead: PDeficitStat);
 
 implementation
 
@@ -24,9 +21,9 @@ var
   Age: Integer;
 begin
   Age := YearsBetween(Date, Candidate^.BirthDate);
-  Result := (LowerCase(Vacancy^.Specialty) = LowerCase(Candidate^.Specialty)) and
-    (LowerCase(Vacancy^.Position) = LowerCase(Candidate^.DesiredPosition)) and
-    (Candidate^.HasHigherEducation >= Vacancy^.RequiresHigherEducation) and
+  Result := (LowerCase(Vacancy^.Specialty) = LowerCase(Candidate^.Specialty))
+    and (LowerCase(Vacancy^.Position) = LowerCase(Candidate^.DesiredPosition))
+    and (Candidate^.HasHigherEducation >= Vacancy^.RequiresHigherEducation) and
     (Age >= Vacancy^.MinAge) and (Age <= Vacancy^.MaxAge) and
     (Candidate^.MinSalary <= Vacancy^.Salary);
 end;
@@ -56,12 +53,16 @@ begin
     begin
       CompanyName := GetCompanyNameByID(CompaniesHead,
         CurrentVacancy^.Data^.CompanyID);
-      Writeln('Вакансия: ', CompanyName, ', ID компании: ',
-        CurrentVacancy^.Data^.CompanyID, ' / ', CurrentVacancy^.Data^.Position,
-        ', ID вакансии: ', CurrentVacancy^.Data.ID);
-      Writeln(F, 'Вакансия: ', CompanyName, ', ID компании: ',
-        CurrentVacancy^.Data^.CompanyID, ' / ', CurrentVacancy^.Data^.Position,
-        ', ID вакансии: ', CurrentVacancy^.Data.ID);
+      Writeln('Вакансия от ', CompanyName, ', ID компании: ',
+        CurrentVacancy^.Data^.CompanyID, ' | Специальность: ',
+        CurrentVacancy^.Data^.Specialty, ', должность: ',
+        CurrentVacancy^.Data^.Position, ', ID вакансии: ',
+        CurrentVacancy^.Data.ID);
+      Writeln(F, 'Вакансия от ', CompanyName, ', ID компании: ',
+        CurrentVacancy^.Data^.CompanyID, ' | Специальность: ',
+        CurrentVacancy^.Data^.Specialty, ', должность: ',
+        CurrentVacancy^.Data^.Position, ', ID вакансии: ',
+        CurrentVacancy^.Data.ID);
 
       MatchCount := 0;
       CurrentCandidate := CandidatesHead;
@@ -72,17 +73,17 @@ begin
         begin
           Inc(MatchCount);
 
-          Writeln('  Кандидат ', MatchCount, ': ',
+          Writeln('  Кандидат №', MatchCount, ', ФИО: ',
             CurrentCandidate^.Data^.FullName, ', ID: ',
-            CurrentCandidate^.Data^.ID, ' (Возраст: ',
+            CurrentCandidate^.Data^.ID, ', Возраст: ',
             YearsBetween(Date, CurrentCandidate^.Data^.BirthDate),
-            ', Ожидания: ', CurrentCandidate^.Data^.MinSalary:0:2, ')');
+            ', Ожидания: ', CurrentCandidate^.Data^.MinSalary:0:2);
 
-          Writeln(F, '  Кандидат ', MatchCount, ': ',
+          Writeln(F, '  Кандидат №', MatchCount, ', ФИО: ',
             CurrentCandidate^.Data^.FullName, ', ID: ',
-            CurrentCandidate^.Data^.ID, ' (Возраст: ',
+            CurrentCandidate^.Data^.ID, ', Возраст: ',
             YearsBetween(Date, CurrentCandidate^.Data^.BirthDate),
-            ', Ожидания: ', CurrentCandidate^.Data^.MinSalary:0:2, ')');
+            ', Ожидания: ', CurrentCandidate^.Data^.MinSalary:0:2);
         end;
         CurrentCandidate := CurrentCandidate^.Next;
       end;
@@ -103,15 +104,13 @@ begin
   end;
 end;
 
-procedure FindDeficitSpecialties(
-  VacanciesHead: PVacancyNode;
-  CandidatesHead: PCandidateNode;
-  var ResultHead: PDeficitStat
-);
+procedure FindDeficitSpecialties(VacanciesHead: PVacancyNode;
+  CandidatesHead: PCandidateNode; var ResultHead: PDeficitStat);
 var
-  CurrentVacancy, CurrentCandidate: Pointer;
+  CurrentVacancy: PVacancyNode;
+  CurrentCandidate: PCandidateNode;
   CurrentStat, NewStat, PrevStat: PDeficitStat;
-  Key, CurrentKey: string;
+  Key: string;
   Found: Boolean;
 begin
   ResultHead := nil;
@@ -119,17 +118,16 @@ begin
   CurrentVacancy := VacanciesHead;
   while CurrentVacancy <> nil do
   begin
-    Key := LowerCase(PVacancyNode(CurrentVacancy)^.Data^.Position + '|' +
-                     PVacancyNode(CurrentVacancy)^.Data^.Specialty);
-
+    Key := LowerCase(CurrentVacancy^.Data^.Position + '|' +
+      CurrentVacancy^.Data^.Specialty);
+    Found := False;
     CurrentStat := ResultHead;
     PrevStat := nil;
-    Found := False;
 
     while CurrentStat <> nil do
     begin
-      CurrentKey := LowerCase(CurrentStat^.Position + '|' + CurrentStat^.Specialty);
-      if CurrentKey = Key then
+      if LowerCase(CurrentStat^.Position + '|' + CurrentStat^.Specialty) = Key
+      then
       begin
         Inc(CurrentStat^.VacancyCount);
         Found := True;
@@ -142,8 +140,8 @@ begin
     if not Found then
     begin
       New(NewStat);
-      NewStat^.Position := PVacancyNode(CurrentVacancy)^.Data^.Position;
-      NewStat^.Specialty := PVacancyNode(CurrentVacancy)^.Data^.Specialty;
+      NewStat^.Position := CurrentVacancy^.Data^.Position;
+      NewStat^.Specialty := CurrentVacancy^.Data^.Specialty;
       NewStat^.VacancyCount := 1;
       NewStat^.CandidateCount := 0;
       NewStat^.Next := nil;
@@ -154,20 +152,20 @@ begin
         PrevStat^.Next := NewStat;
     end;
 
-    CurrentVacancy := PVacancyNode(CurrentVacancy)^.Next;
+    CurrentVacancy := CurrentVacancy^.Next;
   end;
 
   CurrentCandidate := CandidatesHead;
   while CurrentCandidate <> nil do
   begin
-    Key := LowerCase(PCandidateNode(CurrentCandidate)^.Data^.DesiredPosition + '|' +
-                     PCandidateNode(CurrentCandidate)^.Data^.Specialty);
-
+    Key := LowerCase(CurrentCandidate^.Data^.DesiredPosition + '|' +
+      CurrentCandidate^.Data^.Specialty);
     CurrentStat := ResultHead;
+
     while CurrentStat <> nil do
     begin
-      CurrentKey := LowerCase(CurrentStat^.Position + '|' + CurrentStat^.Specialty);
-      if CurrentKey = Key then
+      if LowerCase(CurrentStat^.Position + '|' + CurrentStat^.Specialty) = Key
+      then
       begin
         Inc(CurrentStat^.CandidateCount);
         Break;
@@ -175,7 +173,7 @@ begin
       CurrentStat := CurrentStat^.Next;
     end;
 
-    CurrentCandidate := PCandidateNode(CurrentCandidate)^.Next;
+    CurrentCandidate := CurrentCandidate^.Next;
   end;
 
   CurrentStat := ResultHead;
@@ -183,16 +181,21 @@ begin
 
   while CurrentStat <> nil do
   begin
-    if (CurrentStat^.CandidateCount >= CurrentStat^.VacancyCount * 0.1) or
-       (CurrentStat^.VacancyCount = 0) then
+    if (CurrentStat^.VacancyCount = 0) or
+      (CurrentStat^.CandidateCount >= CurrentStat^.VacancyCount * 0.1) then
     begin
       if PrevStat = nil then
-        ResultHead := CurrentStat^.Next
+      begin
+        ResultHead := CurrentStat^.Next;
+        Dispose(CurrentStat);
+        CurrentStat := ResultHead;
+      end
       else
+      begin
         PrevStat^.Next := CurrentStat^.Next;
-
-      Dispose(CurrentStat);
-      CurrentStat := PrevStat^.Next;
+        Dispose(CurrentStat);
+        CurrentStat := PrevStat^.Next;
+      end;
     end
     else
     begin

@@ -74,7 +74,7 @@ begin
   NewVacancy.CompanyID := CompanyID;
   AppendVacancy(VacanciesHead, NewVacancy);
   Write('Вакансия с ID: ');
-  Write(NewVacancy.CompanyID);
+  Write(NewVacancy.ID);
   Writeln(' была успешна создана!');
 end;
 

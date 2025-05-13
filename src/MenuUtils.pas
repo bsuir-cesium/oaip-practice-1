@@ -199,7 +199,7 @@ begin
         end;
       3:
         begin
-          ID := ReadInteger('Введите ID вакансии: ');
+          ID := ReadInteger('Введите ID компании: ');
           EditCompany(CompaniesHead, ID);
           Awaiting;
         end;
@@ -318,7 +318,7 @@ begin
             Writeln('1. Окладу');
             Writeln('2. Максимальному возрасту');
             Writeln('3. Минимальному возрасту');
-            Writeln('0. Назад');            
+            Writeln('0. Назад');
             FieldChoice := ReadInteger('Выберите поле: ');
 
             if FieldChoice = 0 then
@@ -396,6 +396,7 @@ procedure ShowDeficitSpecialties(VacanciesHead: PVacancyNode;
 var
   Deficits, Current: PDeficitStat;
   F: TextFile;
+  FileName: String;
 begin
   Deficits := nil;
   try
@@ -419,7 +420,9 @@ begin
       Current := Current^.Next;
     end;
 
-    AssignFile(F, 'deficit_reports_' + FormatDateTime('yyyy-mm-dd_hh-nn-ss', Now) + '.txt');
+    FileName := 'deficit_reports_' + FormatDateTime('yyyy-mm-dd_hh-nn-ss',
+      Now) + '.txt';
+    AssignFile(F, FileName);
     Rewrite(F);
     try
       Current := Deficits;
@@ -436,7 +439,7 @@ begin
       CloseFile(F);
     end;
 
-    Writeln('Отчёт сохранён в deficit_report.txt');
+    Writeln('Отчёт сохранён в ' + FileName);
 
   finally
     while Deficits <> nil do
@@ -475,7 +478,7 @@ end;
 procedure ShowMainMenu;
 var
   DataLoaded: Boolean;
-  Choice: Integer;
+  Choice, SubChoice: Integer;
   VacanciesHead: PVacancyNode;
   CandidatesHead: PCandidateNode;
   CompaniesHead: PCompanyNode;
@@ -513,49 +516,31 @@ begin
           Awaiting;
         end;
       2:
-        begin
-          if not DataLoaded then
-          begin
-            Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
-            Awaiting;
-          end
-          else
-            ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
-        end;
+        ShowViewSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       3:
         ShowSortMenu(VacanciesHead, CandidatesHead, CompaniesHead);
       4:
         ShowFilterSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       5:
-        if not DataLoaded then
-        begin
-          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
-          Awaiting;
-        end
-        else
-          ShowAddRecordSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        ShowAddRecordSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       6:
-        if not DataLoaded then
-        begin
-          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
-          Awaiting;
-        end
-        else
-          ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        ShowDeleteSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       7:
-        if not DataLoaded then
-        begin
-          Writeln('Для получения доступа к этому пункту меню вам необходимо загрузить данные из файлов.');
-          Awaiting;
-        end
-        else
-          ShowEditSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
+        ShowEditSubmenu(VacanciesHead, CandidatesHead, CompaniesHead);
       8:
         SFSubMenu(VacanciesHead, CandidatesHead, CompaniesHead);
       9 .. 10:
         begin
           if Choice = 10 then
-            SaveAllData(VacanciesHead, CandidatesHead, CompaniesHead);
+            if not DataLoaded then
+            begin
+              Writeln('Вы не загружали файлы. Учтите, что при сохранении текущих списков данные старых файлов будут перезаписаны!');
+              Writeln('1. Перезаписать');
+              Writeln('2. Выйти без сохранения');
+              SubChoice := ReadInteger('Выберите: ');
+              if SubChoice = 1 then
+                SaveAllData(VacanciesHead, CandidatesHead, CompaniesHead);
+            end;
 
           ClearVacancies(VacanciesHead);
           ClearCandidates(CandidatesHead);
